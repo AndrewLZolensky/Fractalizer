@@ -3,16 +3,14 @@ import numpy as np
 class FractalGenerator():
     def __init__(self, transforms, initial_points):
         self.transforms = transforms
-        self.iterations = [initial_points]
+        self.initial_points = initial_points
+        self.frontier = initial_points
     def build(self, k, history=False):
-        self.iterations = [self.iterations[0]] # reset to initial point
+        self.frontier = self.initial_points.copy()
         for _ in range(k):
-            frontier = np.vstack([transform(self.iterations[-1]) for transform in self.transforms])
-            if history or len(self.iterations) == 1:
-                self.iterations.append(frontier)
-            else:
-                self.iterations[-1] = frontier
-        return self.iterations[-1]
+            temp = np.vstack([transform(self.frontier) for transform in self.transforms])
+            self.frontier = temp
+        return self.frontier
 
 if __name__ == "__main__":
     
